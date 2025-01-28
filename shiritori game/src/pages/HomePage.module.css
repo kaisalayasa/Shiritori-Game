@@ -1,0 +1,89 @@
+body {
+  background-color: #495057;
+}
+.Main_container {
+  background-color: #495057;
+  padding: 50px;
+  display: flex;
+  flex-direction: row;
+  column-gap: 30px;
+  justify-content: center;
+  height: ;
+}
+
+.User_guess {
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #212529;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Game_hud {
+  color: #adb5bd;
+  display: flex;
+  justify-content: space-between;
+}
+
+.User_input {
+  border: none;
+  border-radius: 7px;
+  padding: 10px;
+  height: 30px;
+  width: 480px;
+}
+
+.Modes {
+  margin-top: 20px;
+  color: #adb5bd;
+}
+
+.Game_hud h3 {
+  color: #adb5bd;
+}
+
+.meta-data {
+  color: #adb5bd;
+}
+.Settings {
+  padding: 5px;
+  background-color: #adb5bd;
+  display: flex;
+  flex-direction: column;
+
+  width: 300px;
+}
+.main_menu button {
+  margin-bottom: 5px;
+  width: 300px;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  border: none;
+  background-color: #7d8288;
+  border-radius: 3px;
+}
+.time {
+  margin-top: 5px;
+  color: #000000;
+}
+
+.time h1 {
+  color: #343a40;
+}
+.time_buttons {
+  display: flex;
+}
+.time_buttons button {
+  padding: 10px;
+  border: none;
+  background-color: #ced4da;
+  border-left: #000000;
+  width: 100%;
+  cursor: pointer;
+}
+
+h2,
+h3 {
+  color: #343a40;
+}

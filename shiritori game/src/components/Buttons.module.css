@@ -1,0 +1,8 @@
+.Jlpt_button{
+    border-radius: 5px;
+    color: #CED4DA;
+    border: 1px solid #495057;
+    background-color: #343A40;
+    padding: 10px;
+    cursor: pointer;
+}
