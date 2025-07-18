@@ -1,89 +1,539 @@
-body {
-  background-color: #495057;
-}
-.Main_container {
-  background-color: #495057;
-  padding: 50px;
-  display: flex;
-  flex-direction: row;
-  column-gap: 30px;
-  justify-content: center;
-  height: ;
+/* Modern, responsive design for the Shiritori game with cohesive color palette */
+
+/* Color Palette Variables */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --error-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --pause-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --card-glass: rgba(255, 255, 255, 0.15);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 15px 35px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
-.User_guess {
+body {
+  background: var(--primary-gradient);
+  min-height: 100vh;
+  margin: 0;
+}
+
+.Main_container {
+  background: var(--primary-gradient);
+  height: 100vh;
   padding: 20px;
-  border-radius: 5px;
-  background-color: #212529;
-  width: 500px;
+  padding-top: 100px; /* Fixed: Added top spacing for navbar */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: 
+    "game-area user-section"
+    "settings settings";
+  gap: 25px;
+  align-items: stretch;
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Loading overlay */
+.Loading_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.Loading_spinner {
+  background: var(--card-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  padding: 30px 50px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  box-shadow: var(--shadow-strong);
+  animation: pulse 1.5s infinite;
+  text-align: center;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Game section - Main card area */
+.Game_section {
+  grid-area: game-area;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+  height: 100%;
 }
 
+.Game_section > * {
+  flex: 1;
+}
+
+.Game_section .Feedback {
+  flex: none;
+  margin-top: 20px;
+}
+
+/* Modern Feedback messages - Sleek popups */
+.Feedback {
+  padding: 20px 30px;
+  border-radius: 16px;
+  font-weight: 600;
+  text-align: center;
+  animation: slideInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-strong);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.Feedback::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.Feedback:hover::before {
+  left: 100%;
+}
+
+.Feedback.success {
+  background: var(--success-gradient);
+  box-shadow: 0 15px 35px rgba(79, 172, 254, 0.4);
+}
+
+.Feedback.error {
+  background: var(--error-gradient);
+  box-shadow: 0 15px 35px rgba(250, 112, 154, 0.4);
+}
+
+.Feedback.warning {
+  background: var(--warning-gradient);
+  box-shadow: 0 15px 35px rgba(252, 182, 159, 0.4);
+  color: var(--text-primary);
+}
+
+@keyframes slideInScale {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* User guess section - Large answer card */
+.User_guess {
+  margin-top: 20px;
+  grid-area: user-section;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 35px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  height: 740px;
+  overflow: hidden;
+}
+
+/* Game HUD */
 .Game_hud {
-  color: #adb5bd;
   display: flex;
   justify-content: space-between;
+  padding: 20px 25px;
+  background: var(--secondary-gradient);
+  color: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.Stat h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Modern Game Over popup */
+.Game_over {
+  text-align: center;
+  padding: 30px;
+  background: var(--error-gradient);
+  color: white;
+  border-radius: 20px;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px);
+  animation: slideInScale 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.Game_over h2 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.Game_over p {
+  margin: 0;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* Input form - Enhanced for larger card */
+.Input_form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .User_input {
-  border: none;
-  border-radius: 7px;
-  padding: 10px;
-  height: 30px;
-  width: 480px;
+  border: 3px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 24px 30px;
+  font-size: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  font-weight: 500;
+  color: var(--text-primary);
+  min-height: 60px;
 }
 
-.Modes {
-  margin-top: 20px;
-  color: #adb5bd;
+.User_input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 12px 35px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+  background: white;
 }
 
-.Game_hud h3 {
-  color: #adb5bd;
+.User_input:disabled {
+  background: #f7fafc;
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  border-color: #e2e8f0;
 }
 
-.meta-data {
-  color: #adb5bd;
+.Romaji_preview {
+  padding: 16px 24px;
+  background: #f0f4ff;
+  border-radius: 16px;
+  font-size: 18px;
+  color: #667eea;
+  border: 2px solid #e0e7ff;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+  text-align: center;
 }
+
+/* Game controls - Moved to user input area */
+.Game_controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 60px;
+}
+
+.Info_item {
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.Info_item:last-child {
+  margin-bottom: 0;
+}
+
+.Info_item strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Settings panel - Compact version */
 .Settings {
-  padding: 5px;
-  background-color: #adb5bd;
+  grid-area: settings;
+  background: var(--card-glass);
+  backdrop-filter: blur(20px);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--card-border);
+  height: fit-content;
   display: flex;
-  flex-direction: column;
-
-  width: 300px;
-}
-.main_menu button {
-  margin-bottom: 5px;
-  width: 300px;
-  padding: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  border: none;
-  background-color: #7d8288;
-  border-radius: 3px;
-}
-.time {
-  margin-top: 5px;
-  color: #000000;
+  gap: 30px;
 }
 
-.time h1 {
-  color: #343a40;
-}
-.time_buttons {
-  display: flex;
-}
-.time_buttons button {
-  padding: 10px;
+.Primary_button, .Secondary_button {
+  padding: 18px 24px;
   border: none;
-  background-color: #ced4da;
-  border-left: #000000;
-  width: 100%;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-h2,
-h3 {
-  color: #343a40;
+.Primary_button {
+  background: var(--success-gradient);
+  color: white;
+}
+
+.Primary_button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
+}
+
+.Secondary_button {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+}
+
+.Secondary_button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(255, 107, 107, 0.4);
+  background: linear-gradient(135deg, #ff7979 0%, #fd79a8 100%);
+}
+
+.Primary_button:disabled, .Secondary_button:disabled {
+  background: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Timer settings */
+.time {
+  color: white;
+  flex: 1;
+}
+
+.time h2 {
+  margin: 0 0 20px 0;
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.time_buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.time_buttons button {
+  padding: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.time_buttons button:hover {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.time_buttons button.Active {
+  background: white;
+  color: #667eea;
+  border-color: white;
+  box-shadow: var(--shadow-medium);
+  font-weight: 700;
+}
+
+/* Instructions - Side by side with timer */
+.Instructions {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex: 1;
+}
+
+.Instructions h3 {
+  margin: 0 0 18px 0;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.Instructions ul {
+  margin: 0;
+  padding-left: 20px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.Instructions li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .Main_container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas: 
+      "game-area"
+      "user-section" 
+      "settings";
+    gap: 20px;
+    padding: 15px;
+    padding-top: 90px;
+  }
+  
+  .Settings {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .Main_container {
+    padding: 12px;
+    padding-top: 80px;
+    gap: 15px;
+  }
+  
+  .User_guess {
+    padding: 25px;
+    gap: 20px;
+  }
+  
+  .Settings {
+    padding: 20px;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .Game_hud {
+    padding: 15px 18px;
+  }
+  
+  .Stat h3 {
+    font-size: 16px;
+  }
+  
+  .User_input {
+    font-size: 16px;
+    padding: 18px 22px;
+    min-height: 50px;
+  }
+  
+  .time_buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .Primary_button, .Secondary_button {
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+  
+  .Dictionary_button {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+  
+  .Game_controls {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time_buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .Game_hud {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .Instructions ul {
+    padding-left: 15px;
+  }
+  
+  .Main_container {
+    padding: 10px;
+    padding-top: 70px;
+    gap: 12px;
+  }
+  
+  .User_guess {
+    padding: 20px;
+    gap: 18px;
+  }
+  
+  .User_input {
+    font-size: 15px;
+    padding: 16px 20px;
+    min-height: 45px;
+  }
+  
+  .Primary_button, .Secondary_button {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+  
+  .Settings {
+    padding: 15px;
+  }
+  
+  .Game_controls {
+    gap: 10px;
+    flex-direction: column;
+  }
 }

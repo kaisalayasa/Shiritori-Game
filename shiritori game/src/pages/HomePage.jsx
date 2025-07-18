@@ -1,275 +1,489 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Card from '../components/Card';
+import { convertRomajiToHiragana, isValidShiritoriCharacter, getLastCharacter, areShiritoriCharactersEquivalent, convertSmallToBigKana } from '../utils/romajiConverter';
 import styles from './HomePage.module.css';
 
+// Cache for the dictionary to avoid repeated API calls
+let cachedDictionary = null;
+
+// Clear cache to force reload with new filtering
+const clearDictionaryCache = () => {
+  cachedDictionary = null;
+};
+
 function HomePage() {
-  const [kanji, setKanji] = useState('');
-  const [reading, setReading] = useState('');
-  const [romaji, setRomaji] = useState('');
-  const [level, setLevel] = useState(5);
+  const [currentWord, setCurrentWord] = useState({
+    kanji: '',
+    reading: '',
+    romaji: '',
+    meaning: '',
+    level: 5
+  });
+  
   const [dictionary, setDictionary] = useState([]);
-  const [data, setData] = useState(null);
   const [streak, setStreak] = useState(0);
-
   const [timer, setTimer] = useState(null);
-  const [initialTimer, setInitialTimer] = useState(null);
+  const [initialTimer, setInitialTimer] = useState(15);
   const [gameStarted, setGameStarted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [lose, setLose] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  
   const [answer, setAnswer] = useState('');
-  const [meaning, setMeaning] = useState('');
+  const [convertedAnswer, setConvertedAnswer] = useState('');
+  const [lastUsedWords, setLastUsedWords] = useState(new Set());
+  const [feedback, setFeedback] = useState('');
+  const [feedbackType, setFeedbackType] = useState(''); // 'success', 'error', 'warning'
+  
+  const inputRef = useRef(null);
 
- 
+  // Character type checking functions
   const isAllHiragana = (str) => /^[\u3040-\u309F]+$/.test(str);
   const isAllKatakana = (str) => /^[\u30A0-\u30FF]+$/.test(str);
 
-  
-  const handleAnswer = (e) => {
-    setAnswer(e.target.value);
-  };
+  // Improved dictionary fetching with caching
+  const fetchDictionary = useCallback(async () => {
+    if (cachedDictionary) {
+      setDictionary(cachedDictionary);
+      return cachedDictionary;
+    }
 
-
-  const fetchDictionary = async () => {
+    setLoading(true);
     try {
       const response = await fetch('https://jlpt-vocab-api.vercel.app/api/words/all');
       const fetchedData = await response.json();
 
+      // Filter valid words for Shiritori with strict validation
       const validWords = fetchedData.filter((entry) => {
-        if (!entry.word) return false;
-      
-        if (isAllHiragana(entry.word) || isAllKatakana(entry.word)) return false;
+        if (!entry.word || !entry.furigana) return false;
         
-        const lastChar = entry.word.slice(-1);
+        // Remove words with parentheses or other non-Japanese characters
+        if (entry.furigana.includes('(') || entry.furigana.includes(')') || 
+            entry.furigana.includes('（') || entry.furigana.includes('）')) return false;
+        
+        // Only allow hiragana and katakana characters in furigana
+        if (!/^[\u3040-\u309F\u30A0-\u30FF]+$/.test(entry.furigana)) return false;
+        
+        // Words must be at least 2 characters long
+        if (entry.furigana.length < 2) return false;
+        
+        // Skip words ending with ん (invalid for Shiritori)
+        const lastChar = getLastCharacter(entry.furigana);
         if (lastChar === 'ん') return false;
+        
+        // Skip words starting with invalid Shiritori characters
+        const firstChar = entry.furigana.charAt(0);
+        if (!isValidShiritoriCharacter(firstChar)) return false;
+        
         return true;
       });
 
       if (validWords.length === 0) {
-        console.warn('No valid words found (all were purely hiragana/katakana or ended with "ん")!');
+        throw new Error('No valid words found in dictionary');
+      }
+
+      // Cache the dictionary
+      cachedDictionary = validWords;
+      setDictionary(validWords);
+      return validWords;
+    } catch (error) {
+      console.error('Error fetching dictionary:', error);
+      showFeedback('Failed to load dictionary. Please check your connection.', 'error');
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Get a random valid starting word
+  const getRandomWord = useCallback((currentDictionary = dictionary) => {
+    if (currentDictionary.length === 0) return null;
+    
+    let attempts = 0;
+    let randomWord;
+    
+    do {
+      const randomIndex = Math.floor(Math.random() * currentDictionary.length);
+      randomWord = currentDictionary[randomIndex];
+      attempts++;
+    } while (
+      attempts < 50 && 
+      (!isValidShiritoriCharacter(randomWord.furigana.charAt(0)) || lastUsedWords.has(randomWord.word))
+    );
+    
+    return randomWord;
+  }, [dictionary, lastUsedWords]);
+
+  // Set a new word
+  const setNewWord = useCallback((word) => {
+    if (!word) return;
+    
+    setCurrentWord({
+      kanji: word.word,
+      reading: word.furigana,
+      romaji: word.romaji,
+      meaning: word.meaning,
+      level: word.level
+    });
+    
+    setLastUsedWords(prev => new Set([...prev, word.word]));
+  }, []);
+
+  // Show feedback to user
+  const showFeedback = useCallback((message, type = 'info') => {
+    setFeedback(message);
+    setFeedbackType(type);
+    setTimeout(() => {
+      setFeedback('');
+      setFeedbackType('');
+    }, 3000);
+  }, []);
+
+  // Handle input changes with romaji conversion
+  const handleAnswer = useCallback((e) => {
+    const value = e.target.value;
+    setAnswer(value);
+    
+    // Convert romaji to hiragana in real-time
+    const converted = convertRomajiToHiragana(value);
+    setConvertedAnswer(converted);
+  }, []);
+
+  // Enhanced word validation logic with better romaji support
+  const validateAndProcessAnswer = useCallback(() => {
+    if (!currentWord.reading) return;
+
+    const trimmedAnswer = answer.trim();
+    const trimmedConverted = convertedAnswer.trim();
+    
+    if (!trimmedAnswer && !trimmedConverted) return;
+
+    // Check length requirement - must be at least 2 characters in hiragana/katakana
+    const finalWord = trimmedConverted || trimmedAnswer;
+    if (finalWord.length < 2) {
+      showFeedback('Words must be at least 2 characters long', 'error');
+      return;
+    }
+
+    // Get the last character of current word
+    const lastChar = getLastCharacter(currentWord.reading);
+    
+    // Check if answer starts with the correct character
+    const answerFirstChar = trimmedConverted.charAt(0) || trimmedAnswer.charAt(0);
+    
+    if (!areShiritoriCharactersEquivalent(answerFirstChar, lastChar)) {
+      showFeedback(`Word must start with "${lastChar}" (or "${convertSmallToBigKana(lastChar)}" if small kana)`, 'error');
+      return;
+    }
+
+    // Check if the starting character is valid for Shiritori
+    if (!isValidShiritoriCharacter(answerFirstChar)) {
+      showFeedback(`Words cannot start with "${answerFirstChar}"`, 'error');
+      return;
+    }
+
+    const foundWord = dictionary.find(word => {
+      if (word.word === trimmedAnswer || word.word === trimmedConverted) {
+        return true;
+      }
+      
+      if (word.furigana === trimmedAnswer || word.furigana === trimmedConverted) {
+        return true;
+      }
+      
+      if (word.romaji) {
+        const wordRomaji = word.romaji.toLowerCase().trim();
+        const userRomaji = trimmedAnswer.toLowerCase().trim();
+        
+        if (wordRomaji === userRomaji) {
+          return true;
+        }
+      }
+      
+      if (trimmedConverted && trimmedConverted === word.furigana) {
+        return true;
+      }
+      
+      return false;
+    });
+
+    if (foundWord) {
+      // Check if word was already used
+      if (lastUsedWords.has(foundWord.word)) {
+        showFeedback('Word already used! Try a different word.', 'warning');
         return;
       }
 
-      setDictionary(validWords);
-      const randomIndex = Math.floor(Math.random() * validWords.length);
-      const fetchedKanji = validWords[randomIndex].word;
-      const fetchedReading = validWords[randomIndex].furigana;
-      const fetchedRomaji = validWords[randomIndex].romaji;
-      const fetchedLevel = validWords[randomIndex].level;
-      const fetchedMeaning = validWords[randomIndex].meaning;
-
-      setKanji(fetchedKanji);
-      setReading(fetchedReading);
-      setLevel(fetchedLevel);
-      setRomaji(fetchedRomaji);
-      setMeaning(fetchedMeaning);
-    } catch (error) {
-      console.error('Error fetching random word data:', error);
-    }
-  };
-
-  const dictionaryLength = dictionary.length;
-
-  const findword = () => {
-    if (!reading || !romaji || !kanji) return; 
-
-    const lastReadingChar = reading.slice(-1);
-    const lastRomajiChar = romaji.slice(-1);
-    const lastKanjiChar = kanji.slice(-1);
-
-    const firstCharAnswer = answer.slice(0, 1);
-
-    if (
-      firstCharAnswer === lastReadingChar ||
-      firstCharAnswer === lastKanjiChar ||
-      firstCharAnswer === lastRomajiChar
-    ) {
-      console.log('Valid first character');
-
-      for (let i = 0; i < dictionaryLength; i++) {
-        const currentWord = dictionary[i];
-        if (
-          currentWord.word === answer ||
-          currentWord.romaji === answer ||
-          currentWord.furigana === answer
-        ) {
-          console.log('Correct answer found in dictionary');
-
-         
-          setKanji(currentWord.word);        
-          setReading(currentWord.furigana);  
-          setRomaji(currentWord.romaji);     
-          setLevel(currentWord.level);       
-          setMeaning(currentWord.meaning);   
-
-          setStreak((s) => s + 1);          
-
-          setAnswer('');                      
-
-          setTimer(initialTimer !== null ? initialTimer : 15); 
-
-          break; 
-        }
+      // Valid word found!
+      setNewWord(foundWord);
+      setStreak(prev => prev + 1);
+      setAnswer('');
+      setConvertedAnswer('');
+      setTimer(initialTimer);
+      showFeedback('Correct! +1 point', 'success');
+      
+      // Focus back to input
+      if (inputRef.current) {
+        inputRef.current.focus();
       }
-    }
-  };
-
-  
-  useEffect(() => {
-    if (gameStarted) {
-      fetchDictionary();
-    }
-  }, [gameStarted]);
-
- 
-  useEffect(() => {
-    if (!gameStarted) return;
-    if (answer.length > 2) {
-      findword();
-    }
-  }, [answer, gameStarted]);
-
-
-  function startGame() {
-    setGameStarted(true);
-    setLose(false);
-    if (timer === null) {
-      setTimer(15);
-      setInitialTimer(15);
-    }
-  }
-
-
-  function stopGame() {
-    setGameStarted(false);
-  }
-
- 
-  function restartGame() {
-    setLose(false);
-    setStreak(0);
-    setAnswer('');
-    setTimer(initialTimer !== null ? initialTimer : 15);
-    fetchDictionary();
-    setGameStarted(true);
-  }
-
- 
-  function timerChange(e) {
-    const value = e.target.id;
-    if (value === 'infinite') {
-      setInitialTimer(Infinity);
-      setTimer(Infinity);
     } else {
-      setInitialTimer(Number(value));
-      setTimer(Number(value));
-    }
-  }
-
-  // Timer countdown
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timer > 0 && gameStarted && timer !== Infinity) {
-        setTimer((t) => t - 1);
+      // Find words that start with the correct character for suggestions
+      const validStartWords = dictionary.filter(word => 
+        word.furigana.charAt(0) === answerFirstChar
+      ).slice(0, 3);
+      
+      if (validStartWords.length > 0) {
+        const suggestions = validStartWords.map(w => w.romaji || w.furigana).join(', ');
+        showFeedback(`Word "${trimmedAnswer}" not found in dictionary. Try: ${suggestions}`, 'error');
       } else {
-        if (timer === 0 && gameStarted) {
-          setLose(true);
-          setGameStarted(false); 
-        }
-        clearInterval(interval);
+        showFeedback('Word not found in dictionary. Try another word.', 'error');
       }
-    }, 1000);
+    }
+  }, [answer, convertedAnswer, currentWord.reading, dictionary, lastUsedWords, initialTimer, showFeedback, setNewWord]);
 
-    return () => clearInterval(interval);
-  }, [timer, gameStarted]);
+  // Start game
+  const startGame = useCallback(async () => {
+    setLoading(true);
+    setLose(false);
+    setIsPaused(false);
+    setStreak(0);
+    setLastUsedWords(new Set());
+    setAnswer('');
+    setConvertedAnswer('');
+    setFeedback('');
+    
+    // Clear dictionary cache to ensure new filtering rules are applied
+    clearDictionaryCache();
+    const dict = await fetchDictionary();
+    if (dict.length > 0) {
+      const firstWord = getRandomWord(dict);
+      if (firstWord) {
+        setNewWord(firstWord);
+        setGameStarted(true);
+        setTimer(initialTimer);
+        
+        // Focus input after a short delay
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }, 100);
+      }
+    }
+    setLoading(false);
+  }, [fetchDictionary, getRandomWord, setNewWord, initialTimer, showFeedback]);
+
+  // Stop game
+  const pauseGame = useCallback(() => {
+    setIsPaused(true);
+    showFeedback('Game paused', 'warning');
+  }, [showFeedback]);
+
+  // Resume game
+  const resumeGame = useCallback(() => {
+    setIsPaused(false);
+    showFeedback('Game resumed!', 'success');
+    
+    // Focus input after resuming
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
+  }, [showFeedback]);
+
+  // Restart game
+  const restartGame = useCallback(() => {
+    startGame();
+  }, [startGame]);
+
+  // Timer setting change
+  const timerChange = useCallback((e) => {
+    const value = e.target.id;
+    const newTimer = value === 'infinite' ? Infinity : Number(value);
+    setInitialTimer(newTimer);
+    setTimer(newTimer);
+  }, []);
+
+  // Handle form submission (Enter key)
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+    if (gameStarted && !lose && !loading) {
+      validateAndProcessAnswer();
+    }
+  }, [gameStarted, lose, loading, validateAndProcessAnswer]);
+
+  // Timer countdown effect
+  useEffect(() => {
+    let interval;
+    
+    if (gameStarted && !isPaused && timer > 0 && timer !== Infinity) {
+      interval = setInterval(() => {
+        setTimer(prev => {
+          if (prev <= 1) {
+            setLose(true);
+            setGameStarted(false);
+            setIsPaused(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [gameStarted, isPaused, timer, showFeedback]);
+
+  // Load dictionary on component mount
+  useEffect(() => {
+    fetchDictionary();
+  }, [fetchDictionary]);
 
   return (
     <div className={styles.Main_container}>
-      <div>
+      {loading && (
+        <div className={styles.Loading_overlay}>
+          <div className={styles.Loading_spinner}>Loading...</div>
+        </div>
+      )}
+      
+      <div className={styles.Game_section}>
         <Card
-          kanji={kanji || '言葉'}
-          reading={reading || 'ふりがな'}
+          kanji={currentWord.kanji || '言葉'}
+          reading={currentWord.reading || 'ふりがな'}
+          meaning={currentWord.meaning || 'Start the game to see word meanings'}
+          level={currentWord.level || 'N/A'}
+          romaji={currentWord.romaji || 'N/A'}
         />
       </div>
 
       <div className={styles.User_guess}>
         <div className={styles.Game_hud}>
-          <div>
+          <div className={styles.Stat}>
             <h3>Streak: {streak}</h3>
           </div>
-          <div>
-            <h3>{timer === Infinity ? '∞' : timer}</h3>
+          <div className={styles.Stat}>
+            <h3>{timer === Infinity ? '∞' : (timer || initialTimer)}s</h3>
           </div>
         </div>
 
-        {lose && (
-          <div>
-            <h2 style={{ color: 'red' }}>You lose!</h2>
-            <button
-              onClick={restartGame}
-              style={{
-                marginTop: '5px',
-                marginBottom: '10px',
-                width: '100px',
-                padding: '10px', // Adjusted padding
-                fontFamily: 'Arial, Helvetica, sans-serif',
-                border: 'none',
-                backgroundColor: '#7d8288',
-                borderRadius: '3px',
-                color: '#343a40',
-                cursor: 'pointer',
-              }}
-            >
-              Restart
-            </button>
+        {feedback && (
+          <div className={`${styles.Feedback} ${styles[feedbackType]}`}>
+            {feedback}
           </div>
         )}
 
-        <div>
+        {lose && (
+          <div className={styles.Game_over}>
+            <h2>Game Over!</h2>
+            <p>Final Score: {streak}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className={styles.Input_form}>
           <input
-            id="answer"
+            ref={inputRef}
             onChange={handleAnswer}
             value={answer}
             className={styles.User_input}
             type="text"
-            placeholder={reading ? reading.slice(-1) : ''}
-            disabled={!gameStarted || lose}
+            placeholder={currentWord.reading ? `Start with "${getLastCharacter(currentWord.reading)}"${getLastCharacter(currentWord.reading) !== convertSmallToBigKana(getLastCharacter(currentWord.reading)) ? ` or "${convertSmallToBigKana(getLastCharacter(currentWord.reading))}"` : ''}` : 'Enter a word...'}
+            disabled={!gameStarted || isPaused || lose || loading}
+            autoComplete="off"
           />
+          {convertedAnswer && convertedAnswer !== answer && (
+            <div className={styles.Romaji_preview}>
+              Converted: {convertedAnswer}
+            </div>
+          )}
+        </form>
+
+        <div className={styles.Game_controls}>
+          {lose ? (
+            <button 
+              onClick={restartGame} 
+              disabled={loading}
+              className={styles.Primary_button}
+            >
+              Play Again
+            </button>
+          ) : !gameStarted ? (
+            <button 
+              onClick={startGame} 
+              disabled={loading}
+              className={styles.Primary_button}
+            >
+              Start Game
+            </button>
+          ) : (
+            <>
+              <button 
+                onClick={startGame} 
+                disabled={loading}
+                className={styles.Primary_button}
+              >
+                New Game
+              </button>
+              <button 
+                onClick={isPaused ? resumeGame : pauseGame} 
+                disabled={loading}
+                className={styles.Secondary_button}
+              >
+                {isPaused ? 'Resume Game' : 'Pause'}
+              </button>
+            </>
+          )}
         </div>
 
-        <div className={styles.Modes}>
-          <h1>Meaning: {meaning || ''}</h1>
-          <br />
-          <h1>JLPT Level: {level || ''}</h1>
-        </div>
       </div>
 
       <div className={styles.Settings}>
-        <div className={styles.main_menu}>
-          <button onClick={startGame}>Play</button>
-          <button onClick={stopGame}>Pause</button>
-        </div>
-
         <div className={styles.time}>
-          <h1>Time Settings:</h1>
+          <h2>Timer Settings:</h2>
           <div className={styles.time_buttons}>
-            <button onClick={timerChange} id="5">
+            <button 
+              onClick={timerChange} 
+              id="5"
+              className={initialTimer === 5 ? styles.Active : ''}
+            >
               5s
             </button>
-            <button onClick={timerChange} id="10">
+            <button 
+              onClick={timerChange} 
+              id="10"
+              className={initialTimer === 10 ? styles.Active : ''}
+            >
               10s
             </button>
-            <button onClick={timerChange} id="15">
+            <button 
+              onClick={timerChange} 
+              id="15"
+              className={initialTimer === 15 ? styles.Active : ''}
+            >
               15s
             </button>
-            <button onClick={timerChange} id="infinite">
-              Unlimited
+            <button 
+              onClick={timerChange} 
+              id="infinite"
+              className={initialTimer === Infinity ? styles.Active : ''}
+            >
+              ∞
             </button>
           </div>
-          <div>
-            <h2>Instructions:</h2>
-            <h3>Write a word that starts with the last letter of the previous word.</h3>
-            <h3>Word has to be at least 3 letters.</h3>
-          </div>
+        </div>
+        
+        <div className={styles.Instructions}>
+          <h3>How to Play:</h3>
+          <ul>
+            <li>Enter a Japanese word that starts with the last character of the current word</li>
+            <li>You can type in romaji (it will be converted automatically)</li>
+            <li>Words must be at least 2 characters long</li>
+            <li>Cannot use words starting with ん</li>
+            <li>Cannot repeat words</li>
+            <li>Example: If current word ends with き, type "kare" (romaji) or "かれ" (hiragana)</li>
+          </ul>
         </div>
       </div>
     </div>
