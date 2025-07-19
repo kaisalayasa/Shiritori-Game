@@ -227,17 +227,8 @@ function HomePage() {
         inputRef.current.focus();
       }
     } else {
-      // Find words that start with the correct character for suggestions
-      const validStartWords = dictionary.filter(word => 
-        word.furigana.charAt(0) === answerFirstChar
-      ).slice(0, 3);
-      
-      if (validStartWords.length > 0) {
-        const suggestions = validStartWords.map(w => w.romaji || w.furigana).join(', ');
-        showFeedback(`Word "${trimmedAnswer}" not found in dictionary. Try: ${suggestions}`, 'error');
-      } else {
-        showFeedback('Word not found in dictionary. Try another word.', 'error');
-      }
+      // Word not found in dictionary - no hints provided
+      showFeedback('Word not found in dictionary. Try another word.', 'error');
     }
   }, [answer, convertedAnswer, currentWord.reading, dictionary, lastUsedWords, initialTimer, showFeedback, setNewWord]);
 

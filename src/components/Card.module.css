@@ -133,6 +133,57 @@
   animation: cardEntry 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Laptop screen sizes - 50% smaller scaling */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .CardContainer {
+    max-width: 300px;
+  }
+  
+  .kanji {
+    padding: 30px 20px;
+  }
+  
+  .kanji p {
+    font-size: 2.5rem;
+  }
+  
+  .hiragana {
+    padding: 17px 20px;
+    border-top: 2px solid #667eea;
+  }
+  
+  .hiragana p {
+    font-size: 1rem;
+  }
+  
+  .hiragana span {
+    font-size: 1.1rem;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  
+  .wordInfo {
+    padding: 12px 15px;
+    min-height: 100px;
+  }
+  
+  .infoItem {
+    font-size: 8px;
+    margin-bottom: 6px;
+  }
+  
+  .dictionaryLink {
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .dictionaryButton {
+    padding: 6px 10px;
+    font-size: 7px;
+    gap: 4px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .CardContainer {

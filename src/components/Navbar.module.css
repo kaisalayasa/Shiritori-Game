@@ -1,5 +1,5 @@
 /* Modern navbar design with enhanced glassmorphism */
-header {
+.header {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@ header {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-nav {
+.nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,12 +21,12 @@ nav {
   margin: 0 auto;
 }
 
-nav div {
+.nav div {
   display: flex;
   align-items: center;
 }
 
-nav a {
+.nav a {
   color: white;
   text-decoration: none;
   font-weight: 600;
@@ -39,7 +39,7 @@ nav a {
   backdrop-filter: blur(10px);
 }
 
-nav a:first-child {
+.nav a:first-child {
   font-size: 26px;
   font-weight: 800;
   letter-spacing: 1.5px;
@@ -48,18 +48,18 @@ nav a:first-child {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-nav a:hover {
+.nav a:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-nav a:first-child:hover {
+.nav a:first-child:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.25));
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
-nav a::before {
+.nav a::before {
   content: '';
   position: absolute;
   top: 0;
@@ -70,40 +70,58 @@ nav a::before {
   transition: left 0.5s ease;
 }
 
-nav a:hover::before {
+.nav a:hover::before {
   left: 100%;
+}
+
+/* Laptop screen sizes - 50% smaller scaling */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .nav {
+    padding: 9px 20px;
+    max-width: 700px;
+  }
+  
+  .nav a {
+    font-size: 9px;
+    padding: 6px 12px;
+  }
+  
+  .nav a:first-child {
+    font-size: 13px;
+    letter-spacing: 0.75px;
+  }
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-  nav {
+  .nav {
     padding: 15px 25px;
   }
   
-  nav a {
+  .nav a {
     font-size: 16px;
     padding: 10px 18px;
   }
   
-  nav a:first-child {
+  .nav a:first-child {
     font-size: 22px;
     letter-spacing: 1px;
   }
 }
 
 @media (max-width: 480px) {
-  nav {
+  .nav {
     padding: 12px 20px;
     flex-direction: column;
     gap: 10px;
   }
   
-  nav a {
+  .nav a {
     font-size: 14px;
     padding: 8px 15px;
   }
   
-  nav a:first-child {
+  .nav a:first-child {
     font-size: 20px;
   }
 }

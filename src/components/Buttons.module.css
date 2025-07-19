@@ -6,3 +6,12 @@
     padding: 10px;
     cursor: pointer;
 }
+
+/* Laptop screen sizes - 50% smaller scaling */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .Jlpt_button {
+    padding: 5px;
+    font-size: 8px;
+    border-radius: 3px;
+  }
+}

@@ -420,6 +420,108 @@ body {
   font-weight: 500;
 }
 
+/* Laptop screen sizes - 50% smaller scaling */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .Main_container {
+    padding: 10px;
+    padding-top: 50px;
+    gap: 12px;
+    max-width: 700px;
+  }
+  
+  .Game_section {
+    padding: 10px;
+  }
+  
+  .User_guess {
+    padding: 17px;
+    gap: 12px;
+    height: 370px;
+  }
+  
+  .Game_hud {
+    padding: 10px 12px;
+  }
+  
+  .Stat h3 {
+    font-size: 10px;
+  }
+  
+  .User_input {
+    padding: 12px 15px;
+    font-size: 10px;
+    min-height: 30px;
+  }
+  
+  .Romaji_preview {
+    padding: 8px 12px;
+    font-size: 9px;
+  }
+  
+  .Primary_button, .Secondary_button {
+    padding: 9px 12px;
+    font-size: 8px;
+  }
+  
+  .Game_over {
+    padding: 15px;
+  }
+  
+  .Game_over h2 {
+    font-size: 14px;
+    margin: 0 0 7px 0;
+  }
+  
+  .Game_over p {
+    font-size: 9px;
+  }
+  
+  .Feedback {
+    padding: 10px 15px;
+    font-size: 8px;
+    max-width: 200px;
+  }
+  
+  .Loading_spinner {
+    padding: 15px 25px;
+    font-size: 9px;
+  }
+  
+  .Settings {
+    padding: 12px;
+    gap: 15px;
+  }
+  
+  .time h2 {
+    font-size: 11px;
+    margin: 0 0 10px 0;
+  }
+  
+  .time_buttons {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  
+  .time_buttons button {
+    padding: 7px;
+    font-size: 8px;
+  }
+  
+  .Instructions {
+    padding: 12px;
+  }
+  
+  .Instructions h3 {
+    font-size: 10px;
+    margin: 0 0 9px 0;
+  }
+  
+  .Instructions li {
+    margin-bottom: 5px;
+    font-size: 7px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 1200px) {
   .Main_container {

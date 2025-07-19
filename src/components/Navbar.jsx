@@ -8,8 +8,8 @@ import styles from './Navbar.module.css'
 function Navbar() {
   return (
     <> 
-    <header>
-        <nav>
+    <header className={styles.header}>
+        <nav className={styles.nav}>
             <div>
             <a href="https://en.wikipedia.org/wiki/Shiritori">SHIRITORI</a>
             </div>
