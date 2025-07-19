@@ -40,3 +40,20 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Laptop screen sizes - 50% smaller */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  #root {
+    max-width: 640px; /* 50% smaller: 1280px * 0.5 */
+    padding: 1rem; /* 50% smaller: 2rem * 0.5 */
+  }
+
+  .logo {
+    height: 3em; /* 50% smaller: 6em * 0.5 */
+    padding: 0.75em; /* 50% smaller: 1.5em * 0.5 */
+  }
+
+  .card {
+    padding: 1em; /* 50% smaller: 2em * 0.5 */
+  }
+}

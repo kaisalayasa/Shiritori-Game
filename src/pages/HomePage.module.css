@@ -25,7 +25,7 @@ body {
 
 .Main_container {
   background: var(--primary-gradient);
-  height: 100vh;
+  min-height: 100vh;
   padding: 20px;
   padding-top: 100px; /* Fixed: Added top spacing for navbar */
   display: grid;
@@ -39,7 +39,7 @@ body {
   position: relative;
   max-width: 1400px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Loading overlay */
@@ -535,5 +535,136 @@ body {
   .Game_controls {
     gap: 10px;
     flex-direction: column;
+  }
+}
+
+/* Laptop screen sizes - 50% smaller */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .Main_container {
+    padding: 10px; /* 50% smaller: 20px * 0.5 */
+    padding-top: 50px; /* 50% smaller: 100px * 0.5 */
+    gap: 12.5px; /* 50% smaller: 25px * 0.5 */
+    max-width: 700px; /* 50% smaller: 1400px * 0.5 */
+  }
+
+  .Game_section {
+    padding: 10px; /* 50% smaller: 20px * 0.5 */
+  }
+
+  .User_guess {
+    padding: 17.5px; /* 50% smaller: 35px * 0.5 */
+    gap: 12.5px; /* 50% smaller: 25px * 0.5 */
+    height: 370px; /* 50% smaller: 740px * 0.5 */
+    border-radius: 12px; /* 50% smaller: 24px * 0.5 */
+  }
+
+  .Game_hud {
+    padding: 10px 12.5px; /* 50% smaller: 20px 25px * 0.5 */
+    border-radius: 8px; /* 50% smaller: 16px * 0.5 */
+  }
+
+  .Stat h3 {
+    font-size: 10px; /* 50% smaller: 20px * 0.5 */
+  }
+
+  .Feedback {
+    padding: 10px 15px; /* 50% smaller: 20px 30px * 0.5 */
+    border-radius: 8px; /* 50% smaller: 16px * 0.5 */
+    font-size: 8px; /* 50% smaller: 16px * 0.5 */
+    max-width: 200px; /* 50% smaller: 400px * 0.5 */
+  }
+
+  .Game_over {
+    padding: 15px; /* 50% smaller: 30px * 0.5 */
+    border-radius: 10px; /* 50% smaller: 20px * 0.5 */
+  }
+
+  .Game_over h2 {
+    font-size: 14px; /* 50% smaller: 28px * 0.5 */
+    margin: 0 0 7.5px 0; /* 50% smaller: 15px * 0.5 */
+  }
+
+  .Game_over p {
+    font-size: 9px; /* 50% smaller: 18px * 0.5 */
+  }
+
+  .User_input {
+    padding: 12px 15px; /* 50% smaller: 24px 30px * 0.5 */
+    font-size: 10px; /* 50% smaller: 20px * 0.5 */
+    border-radius: 10px; /* 50% smaller: 20px * 0.5 */
+    min-height: 30px; /* 50% smaller: 60px * 0.5 */
+  }
+
+  .Primary_button, .Secondary_button {
+    padding: 9px 12px; /* 50% smaller: 18px 24px * 0.5 */
+    font-size: 8px; /* 50% smaller: 16px * 0.5 */
+    border-radius: 8px; /* 50% smaller: 16px * 0.5 */
+  }
+
+  .Settings {
+    padding: 12.5px; /* 50% smaller: 25px * 0.5 */
+    border-radius: 10px; /* 50% smaller: 20px * 0.5 */
+    gap: 15px; /* 50% smaller: 30px * 0.5 */
+  }
+
+  .Game_controls {
+    gap: 7.5px; /* 50% smaller: 15px * 0.5 */
+    min-height: 30px; /* 50% smaller: 60px * 0.5 */
+  }
+
+  .Input_form {
+    gap: 10px; /* 50% smaller: 20px * 0.5 */
+  }
+
+  .Romaji_preview {
+    padding: 8px 12px; /* 50% smaller: 16px 24px * 0.5 */
+    border-radius: 8px; /* 50% smaller: 16px * 0.5 */
+    font-size: 9px; /* 50% smaller: 18px * 0.5 */
+  }
+
+  .time h2 {
+    font-size: 11px; /* 50% smaller: 22px * 0.5 */
+    margin: 0 0 10px 0; /* 50% smaller: 20px * 0.5 */
+  }
+
+  .time_buttons {
+    gap: 6px; /* 50% smaller: 12px * 0.5 */
+    margin-bottom: 12.5px; /* 50% smaller: 25px * 0.5 */
+  }
+
+  .time_buttons button {
+    padding: 7.5px; /* 50% smaller: 15px * 0.5 */
+    border-radius: 6px; /* 50% smaller: 12px * 0.5 */
+    font-size: 8px; /* 50% smaller: 16px * 0.5 */
+  }
+
+  .Instructions {
+    padding: 12px; /* 50% smaller: 24px * 0.5 */
+    border-radius: 8px; /* 50% smaller: 16px * 0.5 */
+  }
+
+  .Instructions h3 {
+    font-size: 10px; /* 50% smaller: 20px * 0.5 */
+    margin: 0 0 9px 0; /* 50% smaller: 18px * 0.5 */
+  }
+
+  .Instructions ul {
+    padding-left: 10px; /* 50% smaller: 20px * 0.5 */
+    font-size: 8px; /* 50% smaller: 16px * 0.5 */
+  }
+
+  .Instructions li {
+    margin-bottom: 5px; /* 50% smaller: 10px * 0.5 */
+  }
+
+  .Info_item {
+    font-size: 8px; /* 50% smaller: 16px * 0.5 */
+    margin-bottom: 7.5px; /* 50% smaller: 15px * 0.5 */
+  }
+
+  .Loading_spinner {
+    padding: 15px 25px; /* 50% smaller: 30px 50px * 0.5 */
+    border-radius: 10px; /* 50% smaller: 20px * 0.5 */
+    font-size: 9px; /* 50% smaller: 18px * 0.5 */
   }
 }

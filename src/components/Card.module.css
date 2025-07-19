@@ -269,6 +269,68 @@
   }
 }
 
+/* Laptop screen sizes - 50% smaller */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .CardContainer {
+    max-width: 300px; /* 50% smaller: 600px * 0.5 */
+    border-radius: 12px; /* 50% smaller: 24px * 0.5 */
+  }
+
+  .kanji {
+    padding: 30px 20px; /* 50% smaller: 60px 40px * 0.5 */
+  }
+
+  .kanji p {
+    font-size: 2.5rem; /* 50% smaller: 5rem * 0.5 */
+  }
+
+  .hiragana {
+    padding: 17.5px 20px; /* 50% smaller: 35px 40px * 0.5 */
+    border-top: 2px solid #667eea; /* 50% smaller: 4px * 0.5 */
+  }
+
+  .hiragana::before {
+    height: 2px; /* 50% smaller: 4px * 0.5 */
+  }
+
+  .hiragana p {
+    font-size: 1rem; /* 50% smaller: 2rem * 0.5 */
+  }
+
+  .hiragana span {
+    font-size: 1.1rem; /* 50% smaller: 2.2rem * 0.5 */
+    padding: 2px 4px; /* 50% smaller: 4px 8px * 0.5 */
+    border-radius: 3px; /* 50% smaller: 6px * 0.5 */
+  }
+
+  .wordInfo {
+    padding: 12.5px 15px; /* 50% smaller: 25px 30px * 0.5 */
+    min-height: 100px; /* 50% smaller: 200px * 0.5 */
+  }
+
+  .infoContainer {
+    gap: 6px; /* 50% smaller: 12px * 0.5 */
+  }
+
+  .infoItem {
+    font-size: 8px; /* 50% smaller: 16px * 0.5 */
+    margin-bottom: 6px; /* 50% smaller: 12px * 0.5 */
+  }
+
+  .dictionaryLink {
+    padding-top: 10px; /* 50% smaller: 20px * 0.5 */
+    border-top: 1px solid #e2e8f0; /* 50% smaller: 2px * 0.5 */
+  }
+
+  .dictionaryButton {
+    padding: 6px 10px; /* 50% smaller: 12px 20px * 0.5 */
+    border-radius: 6px; /* 50% smaller: 12px * 0.5 */
+    font-size: 7px; /* 50% smaller: 14px * 0.5 */
+    gap: 4px; /* 50% smaller: 8px * 0.5 */
+    border: 1px solid transparent; /* 50% smaller: 2px * 0.5 */
+  }
+}
+
 @media (max-width: 480px) {
   .wordInfo {
     padding: 18px 20px;
