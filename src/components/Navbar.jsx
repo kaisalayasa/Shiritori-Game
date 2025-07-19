@@ -14,7 +14,7 @@ function Navbar() {
             <a href="https://en.wikipedia.org/wiki/Shiritori">SHIRITORI</a>
             </div>
             <div>
-            <a href="https://github.com/kaisalayasa">Github</a>
+            <a href="https://github.com/kaisalayasa/Shiritori-Game">Github</a>
             </div>
             
         </nav>
