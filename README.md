@@ -1,8 +1,32 @@
-# React + Vite
+# 🇯🇵 Japanese Vocabulary Game - Shiritori
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple Japanese vocabulary game built with React. The user must type a new word that begins with the last character of the previous word. Vocabulary is fetched from an online JLPT API.
 
-Currently, two official plugins are available:
+## 🎮 Gameplay
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Start with a random Japanese word.
+- Type a new word that starts with the final character (kana) of the previous word.
+- You can type in **romaji** or **hiragana**.
+- Press **Enter** to submit your word.
+- The word must exist in the JLPT vocabulary database.
+- Each word is clickable and links to its **Jisho.org** page for easy lookup.
+- Keep going as long as you can without repeating or making a mistake!
+
+## 🖼️ Screenshots
+
+### 🧩 Game Interface
+
+<!-- Insert screenshot of the main game UI here -->
+<img width="1213" height="614" alt="image" src="https://github.com/user-attachments/assets/a9eaa0f2-0b71-4fb7-b532-1168113b43d7" />
+
+
+## 🚀 Features
+
+- 🔤 Romaji and hiragana input support
+- ✅ Real-time word validation
+- 🔗 Jisho.org integration for word lookup
+- 📚 Uses JLPT vocabulary API
+- 🧠 Great for learning new words and practicing kana
+- ⚛️ Built entirely in React with hooks
+  
+## 🌐 Link https://shiritori-game-five.vercel.app/
