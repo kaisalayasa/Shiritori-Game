@@ -25,7 +25,7 @@ body {
 
 .Main_container {
   background: var(--primary-gradient);
-  height: 100vh;
+  min-height: 100vh;
   padding: 20px;
   padding-top: 100px; /* Fixed: Added top spacing for navbar */
   display: grid;
@@ -39,7 +39,8 @@ body {
   position: relative;
   max-width: 1400px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Loading overlay */
@@ -168,8 +169,9 @@ body {
   flex-direction: column;
   gap: 25px;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  height: 740px;
-  overflow: hidden;
+  min-height: 400px;
+  max-height: 740px;
+  overflow-y: auto;
 }
 
 /* Game HUD */
@@ -436,7 +438,8 @@ body {
   .User_guess {
     padding: 17px;
     gap: 12px;
-    height: 370px;
+    min-height: 200px;
+    max-height: 370px;
   }
   
   .Game_hud {
