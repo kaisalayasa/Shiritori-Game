@@ -1,4 +1,3 @@
-/* Modern card design - Enhanced and larger main card */
 .CardContainer {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
@@ -7,12 +6,14 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 600px; /* Increased from 400px */
+  max-width: 600px;
   width: 100%;
   transform-style: preserve-3d;
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  max-height: 635px;
 }
 
 .CardContainer:hover {
@@ -23,20 +24,25 @@
 .kanji {
   background: linear-gradient(135deg, #2c3e50, #34495e);
   color: white;
-  padding: 60px 40px; /* Increased from 40px 30px */
+  padding: 60px 40px;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
 .kanji::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
   transform: translateX(-100%);
   transition: transform 0.8s ease;
 }
@@ -46,13 +52,17 @@
 }
 
 .kanji::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -63,8 +73,8 @@
 
 .kanji p {
   margin: 0;
-  font-size: 5rem; /* Increased from 3.5rem */
-  font-weight: 800; /* Increased from bold */
+  font-size: 5rem;
+  font-weight: 800;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   position: relative;
   z-index: 1;
@@ -73,14 +83,14 @@
 
 .hiragana {
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  padding: 35px 40px; /* Increased from 25px 30px */
+  padding: 35px 40px;
   text-align: center;
-  border-top: 4px solid #667eea; /* Increased from 3px */
+  border-top: 4px solid #667eea;
   position: relative;
 }
 
 .hiragana::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -91,33 +101,37 @@
 }
 
 @keyframes shimmer {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .hiragana p {
   margin: 0;
-  font-size: 2rem; /* Increased from 1.5rem */
-  font-weight: 600; /* Increased from 500 */
+  font-size: 2rem;
+  font-weight: 600;
   color: #495057;
-  font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
   letter-spacing: 0.1em;
 }
 
 .hiragana span {
   color: #dc3545;
-  font-weight: 700; /* Increased from bold */
+  font-weight: 700;
   background: rgba(220, 53, 69, 0.15);
-  padding: 4px 8px; /* Increased from 2px 6px */
-  border-radius: 6px; /* Increased from 4px */
+  padding: 4px 8px;
+  border-radius: 6px;
   text-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
   border: 1px solid rgba(220, 53, 69, 0.2);
   display: inline-block;
   margin: 0 2px;
-  font-size: 2.2rem; /* Slightly larger than parent */
+  font-size: 2.2rem;
 }
 
-/* Enhanced animations */
 @keyframes cardEntry {
   from {
     opacity: 0;
@@ -133,50 +147,49 @@
   animation: cardEntry 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Laptop screen sizes - 50% smaller scaling */
 @media (min-width: 1024px) and (max-width: 1366px) {
   .CardContainer {
     max-width: 300px;
   }
-  
+
   .kanji {
     padding: 30px 20px;
   }
-  
+
   .kanji p {
     font-size: 2.5rem;
   }
-  
+
   .hiragana {
     padding: 17px 20px;
     border-top: 2px solid #667eea;
   }
-  
+
   .hiragana p {
     font-size: 1rem;
   }
-  
+
   .hiragana span {
     font-size: 1.1rem;
     padding: 2px 4px;
     border-radius: 3px;
   }
-  
+
   .wordInfo {
     padding: 12px 15px;
     min-height: 100px;
   }
-  
+
   .infoItem {
     font-size: 8px;
     margin-bottom: 6px;
   }
-  
+
   .dictionaryLink {
     padding-top: 10px;
     border-top: 1px solid #e2e8f0;
   }
-  
+
   .dictionaryButton {
     padding: 6px 10px;
     font-size: 7px;
@@ -184,28 +197,27 @@
   }
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .CardContainer {
-    max-width: 450px; /* Increased from 300px */
+    max-width: 450px;
   }
-  
+
   .kanji {
-    padding: 45px 30px; /* Increased from 30px 20px */
+    padding: 45px 30px;
   }
-  
+
   .kanji p {
-    font-size: 3.5rem; /* Increased from 2.5rem */
+    font-size: 3.5rem;
   }
-  
+
   .hiragana {
-    padding: 25px 30px; /* Increased from 20px */
+    padding: 25px 30px;
   }
-  
+
   .hiragana p {
-    font-size: 1.5rem; /* Increased from 1.2rem */
+    font-size: 1.5rem;
   }
-  
+
   .hiragana span {
     font-size: 1.6rem;
     padding: 3px 6px;
@@ -216,29 +228,28 @@
   .CardContainer {
     max-width: 350px;
   }
-  
+
   .kanji {
     padding: 35px 25px;
   }
-  
+
   .kanji p {
     font-size: 2.8rem;
   }
-  
+
   .hiragana {
     padding: 20px 25px;
   }
-  
+
   .hiragana p {
     font-size: 1.3rem;
   }
-  
+
   .hiragana span {
     font-size: 1.4rem;
   }
 }
 
-/* Word information section */
 .wordInfo {
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   padding: 25px 30px;
@@ -273,7 +284,6 @@
   font-weight: 700;
 }
 
-/* Dictionary button inside card */
 .dictionaryLink {
   margin-top: auto;
   padding-top: 20px;
@@ -308,12 +318,11 @@
   transform: translateY(0);
 }
 
-/* Responsive design for word info */
 @media (max-width: 768px) {
   .wordInfo {
     padding: 20px 25px;
   }
-  
+
   .infoItem {
     font-size: 15px;
     margin-bottom: 10px;
@@ -324,7 +333,7 @@
   .wordInfo {
     padding: 18px 20px;
   }
-  
+
   .infoItem {
     font-size: 14px;
     margin-bottom: 8px;

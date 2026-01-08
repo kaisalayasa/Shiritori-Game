@@ -1,5 +1,3 @@
-/* Modern, responsive design for the Shiritori game with cohesive color palette */
-
 /* Color Palette Variables */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -43,7 +41,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Loading overlay */
 .Loading_overlay {
   position: fixed;
   top: 0;
@@ -84,7 +81,6 @@ body {
   }
 }
 
-/* Game section - Main card area */
 .Game_section {
   grid-area: game-area;
   display: flex;
@@ -167,7 +163,6 @@ body {
   }
 }
 
-/* User guess section - Large answer card */
 .User_guess {
   margin-top: 20px;
   grid-area: user-section;
@@ -181,11 +176,10 @@ body {
   gap: 25px;
   border: 1px solid rgba(255, 255, 255, 0.4);
   min-height: 400px;
-  max-height: 740px;
+  max-height: 635px;
   overflow-y: auto;
 }
 
-/* Game HUD */
 .Game_hud {
   display: flex;
   justify-content: space-between;
@@ -204,7 +198,6 @@ body {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Modern Game Over popup */
 .Game_over {
   text-align: center;
   padding: 30px;
@@ -230,7 +223,6 @@ body {
   opacity: 0.9;
 }
 
-/* Input form - Enhanced for larger card */
 .Input_form {
   display: flex;
   flex-direction: column;
@@ -278,7 +270,6 @@ body {
   text-align: center;
 }
 
-/* Game controls - Moved to user input area */
 .Game_controls {
   display: flex;
   gap: 15px;
@@ -303,7 +294,6 @@ body {
   font-weight: 700;
 }
 
-/* Settings panel - Compact version */
 .Settings {
   grid-area: settings;
   background: var(--card-glass);
@@ -361,7 +351,6 @@ body {
   box-shadow: none;
 }
 
-/* Timer settings */
 .time {
   color: white;
   flex: 1;
@@ -407,7 +396,6 @@ body {
   font-weight: 700;
 }
 
-/* Instructions - Side by side with timer */
 .Instructions {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -436,7 +424,6 @@ body {
   font-weight: 500;
 }
 
-/* Laptop screen sizes - 50% smaller scaling */
 @media (min-width: 1024px) and (max-width: 1366px) {
   .Main_container {
     padding: 10px;
@@ -540,7 +527,6 @@ body {
   }
 }
 
-/* Responsive design */
 @media (max-width: 1200px) {
   .Main_container {
     grid-template-columns: 1fr;

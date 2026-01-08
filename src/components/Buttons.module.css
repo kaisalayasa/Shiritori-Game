@@ -1,13 +1,12 @@
-.Jlpt_button{
-    border-radius: 5px;
-    color: #CED4DA;
-    border: 1px solid #495057;
-    background-color: #343A40;
-    padding: 10px;
-    cursor: pointer;
+.Jlpt_button {
+  border-radius: 5px;
+  color: #ced4da;
+  border: 1px solid #495057;
+  background-color: #343a40;
+  padding: 10px;
+  cursor: pointer;
 }
 
-/* Laptop screen sizes - 50% smaller scaling */
 @media (min-width: 1024px) and (max-width: 1366px) {
   .Jlpt_button {
     padding: 5px;
