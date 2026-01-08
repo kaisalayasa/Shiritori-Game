@@ -27,11 +27,11 @@ body {
   background: var(--primary-gradient);
   min-height: 100vh;
   padding: 20px;
-  padding-top: 100px; /* Fixed: Added top spacing for navbar */
+  padding-top: 100px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
-  grid-template-areas: 
+  grid-template-areas:
     "game-area user-section"
     "settings settings";
   gap: 25px;
@@ -73,8 +73,15 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
 }
 
 /* Game section - Main card area */
@@ -96,7 +103,6 @@ body {
   margin-top: 20px;
 }
 
-/* Modern Feedback messages - Sleek popups */
 .Feedback {
   padding: 20px 30px;
   border-radius: 16px;
@@ -115,13 +121,18 @@ body {
 }
 
 .Feedback::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.6s ease;
 }
 
@@ -242,7 +253,8 @@ body {
 .User_input:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 12px 35px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15),
+    0 12px 35px rgba(0, 0, 0, 0.12);
   transform: translateY(-3px);
   background: white;
 }
@@ -305,7 +317,8 @@ body {
   gap: 30px;
 }
 
-.Primary_button, .Secondary_button {
+.Primary_button,
+.Secondary_button {
   padding: 18px 24px;
   border: none;
   border-radius: 16px;
@@ -340,7 +353,8 @@ body {
   background: linear-gradient(135deg, #ff7979 0%, #fd79a8 100%);
 }
 
-.Primary_button:disabled, .Secondary_button:disabled {
+.Primary_button:disabled,
+.Secondary_button:disabled {
   background: rgba(255, 255, 255, 0.3);
   color: rgba(255, 255, 255, 0.7);
   cursor: not-allowed;
@@ -430,95 +444,96 @@ body {
     gap: 12px;
     max-width: 700px;
   }
-  
+
   .Game_section {
     padding: 10px;
   }
-  
+
   .User_guess {
     padding: 17px;
     gap: 12px;
     min-height: 200px;
     max-height: 370px;
   }
-  
+
   .Game_hud {
     padding: 10px 12px;
   }
-  
+
   .Stat h3 {
     font-size: 10px;
   }
-  
+
   .User_input {
     padding: 12px 15px;
     font-size: 10px;
     min-height: 30px;
   }
-  
+
   .Romaji_preview {
     padding: 8px 12px;
     font-size: 9px;
   }
-  
-  .Primary_button, .Secondary_button {
+
+  .Primary_button,
+  .Secondary_button {
     padding: 9px 12px;
     font-size: 8px;
   }
-  
+
   .Game_over {
     padding: 15px;
   }
-  
+
   .Game_over h2 {
     font-size: 14px;
     margin: 0 0 7px 0;
   }
-  
+
   .Game_over p {
     font-size: 9px;
   }
-  
+
   .Feedback {
     padding: 10px 15px;
     font-size: 8px;
     max-width: 200px;
   }
-  
+
   .Loading_spinner {
     padding: 15px 25px;
     font-size: 9px;
   }
-  
+
   .Settings {
     padding: 12px;
     gap: 15px;
   }
-  
+
   .time h2 {
     font-size: 11px;
     margin: 0 0 10px 0;
   }
-  
+
   .time_buttons {
     gap: 6px;
     margin-bottom: 12px;
   }
-  
+
   .time_buttons button {
     padding: 7px;
     font-size: 8px;
   }
-  
+
   .Instructions {
     padding: 12px;
   }
-  
+
   .Instructions h3 {
     font-size: 10px;
     margin: 0 0 9px 0;
   }
-  
+
   .Instructions li {
     margin-bottom: 5px;
     font-size: 7px;
@@ -530,15 +545,15 @@ body {
   .Main_container {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    grid-template-areas: 
+    grid-template-areas:
       "game-area"
-      "user-section" 
+      "user-section"
       "settings";
     gap: 20px;
     padding: 15px;
     padding-top: 90px;
   }
-  
+
   .Settings {
     flex-direction: column;
     gap: 20px;
@@ -551,46 +566,47 @@ body {
     padding-top: 80px;
     gap: 15px;
   }
-  
+
   .User_guess {
     padding: 25px;
     gap: 20px;
   }
-  
+
   .Settings {
     padding: 20px;
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .Game_hud {
     padding: 15px 18px;
   }
-  
+
   .Stat h3 {
     font-size: 16px;
   }
-  
+
   .User_input {
     font-size: 16px;
     padding: 18px 22px;
     min-height: 50px;
   }
-  
+
   .time_buttons {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .Primary_button, .Secondary_button {
+
+  .Primary_button,
+  .Secondary_button {
     padding: 12px 18px;
     font-size: 13px;
   }
-  
+
   .Dictionary_button {
     font-size: 13px;
     padding: 10px 16px;
   }
-  
+
   .Game_controls {
     gap: 12px;
   }
@@ -600,43 +616,44 @@ body {
   .time_buttons {
     grid-template-columns: 1fr;
   }
-  
+
   .Game_hud {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
-  
+
   .Instructions ul {
     padding-left: 15px;
   }
-  
+
   .Main_container {
     padding: 10px;
     padding-top: 70px;
     gap: 12px;
   }
-  
+
   .User_guess {
     padding: 20px;
     gap: 18px;
   }
-  
+
   .User_input {
     font-size: 15px;
     padding: 16px 20px;
     min-height: 45px;
   }
-  
-  .Primary_button, .Secondary_button {
+
+  .Primary_button,
+  .Secondary_button {
     padding: 10px 15px;
     font-size: 12px;
   }
-  
+
   .Settings {
     padding: 15px;
   }
-  
+
   .Game_controls {
     gap: 10px;
     flex-direction: column;
